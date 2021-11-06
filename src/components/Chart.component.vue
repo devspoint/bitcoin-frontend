@@ -38,7 +38,7 @@ export default {
             },
           },
         },
-        colors:['#B4F8C8'],
+        colors: ["#B4F8C8"],
         dataLabels: {
           enabled: false,
         },
@@ -48,21 +48,20 @@ export default {
         },
         yaxis: {
           opposite: true,
-                labels: {
-          show: true,
-          align: 'right',
-          minWidth: 0,
-          maxWidth: 160,
-          style: {
+          labels: {
+            show: true,
+            align: "right",
+            minWidth: 0,
+            maxWidth: 160,
+            style: {
               colors: [],
-              fontSize: '20px',
-              fontFamily: 'Helvetica, Arial, sans-serif',
+              fontSize: "20px",
+              fontFamily: "Helvetica, Arial, sans-serif",
               fontWeight: 400,
-              cssClass: 'apexcharts-yaxis-label',
-          }
-      },
-        colors: ['#E91E63']
-
+              cssClass: "apexcharts-yaxis-label",
+            },
+          },
+          colors: ["#E91E63"],
         },
       },
       series: [
