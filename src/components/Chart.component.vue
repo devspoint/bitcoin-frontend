@@ -1,6 +1,6 @@
 <template>
       <div id="chart">
-        <apexchart type="line" height="350" ref="chart" :options="chartOptions" :series="series"></apexchart>
+        <apexchart type="line" height="850" ref="chart" :options="chartOptions" :series="series"></apexchart>
       </div>
     
 </template>
@@ -9,12 +9,15 @@
 
 var xpto = 30;
 var data = []
-
-function getNewSeries() {
-  var yz = xpto + 10;
-  xpto = yz;
-  return data.push(yz);
+var read;
+var bitcoinData = {
+  "order": [],
+  "openingValue": [],
+  "date": []
 }
+var dates = ["2013-04-28 23:59:59"]
+
+
 
 export default {
   name: 'Chart',
@@ -24,7 +27,7 @@ export default {
       chartOptions: {
         chart: {
           id: 'realtime',
-          height: 350,
+          height: 850,
           type: 'line',
           animations: {
           enabled: true,
@@ -35,24 +38,54 @@ export default {
         },
         },
         xaxis: {
-          categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998]
-        }
+          type: 'datetime',
+          categories: dates,
+        },
       },
-          series: [{
-            data: data.slice()
-          }],
+      series: [{
+        data: data.slice()
+      }],
     }
   },
 mounted: function () {
           var me = this
-          window.setInterval(function () {
-            getNewSeries(xpto, {
-              min: 10,
-              max: 90
+
+            fetch('http://localhost:8081/bitcoin/history')
+            .then( (response) => {
+              const reader = response.body.getReader()
+              return reader.read().then(read = (result)=>
+              {
+
+                var stringResult = new TextDecoder().decode(result.value);
+                
+              
+                
+                if (result.done) {
+                  return data
+                }
+
+                var split = stringResult.split("data:")
+                split.forEach(element => {
+                  if (element.length > 0) {
+                    console.log(element)
+                    var jsonElement = JSON.parse(element)
+                    bitcoinData.order.push(jsonElement.order)
+                    bitcoinData.openingValue.push(jsonElement.openingValue.toFixed(2))
+                    dates.push(jsonElement.date)
+                  }
+                });
+
+                return reader.read().then(read)
+              })
             })
+
             
+
+          window.setInterval(function () {
+
+
             me.$refs.chart.updateSeries([{
-              data: data
+              data: bitcoinData.openingValue
             }])
           }, 1000)
         
