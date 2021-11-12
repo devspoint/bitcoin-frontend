@@ -11,7 +11,6 @@
 </template>
 
 <script>
-var xpto = 30;
 var data = [];
 var read;
 var bitcoinData = {
